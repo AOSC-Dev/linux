@@ -40,6 +40,11 @@ extern struct acpi_madt_core_pic acpi_core_pic[MAX_CORE_PIC];
 
 extern int __init parse_acpi_topology(void);
 
+#define ACPI_HAVE_ARCH_TABLE_OVERRIDE
+extern void acpi_arch_os_table_override (struct acpi_table_header *existing_table, struct acpi_table_header **new_table);
+#define ACPI_HAVE_ARCH_TABLE_INIT_COMPLETE
+extern void acpi_arch_table_init_complete(void);
+
 #endif /* !CONFIG_ACPI */
 
 #define ACPI_TABLE_UPGRADE_MAX_PHYS ARCH_LOW_ADDRESS_LIMIT
