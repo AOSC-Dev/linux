@@ -8,4 +8,8 @@ BINDGEN_TARGET_i386   := i386-linux-gnu
 BINDGEN_TARGET_um     := $(BINDGEN_TARGET_$(SUBARCH))
 BINDGEN_TARGET                := $(BINDGEN_TARGET_$(SRCARCH))
 
+ifeq ($(BINDGEN_TARGET),)
+$(error add '--target=' option to scripts/Makefile.rust)
+else
 export BINDGEN_TARGET
+endif
