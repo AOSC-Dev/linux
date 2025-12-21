@@ -62,6 +62,8 @@ required:
   - interrupts
   - clocks
   - clock-names
+  - resets
+  - reset-names
 
 unevaluatedProperties: false
 
@@ -77,4 +79,6 @@ examples:
       pinctrl-names = "default", "uhs";
       pinctrl-0 = <&sdhci_default_cfg>;
       pinctrl-1 = <&sdhci_uhs_cfg>;
+      resets = <&syscon_apmu 2>, <&syscon_apmu 5>;
+      reset-names = "axi", "sdh";
     };
