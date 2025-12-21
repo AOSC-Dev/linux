@@ -50,6 +50,8 @@ required:
   - interrupts
   - clocks
   - clock-names
+  - resets
+  - reset-names
 
 unevaluatedProperties: false
 
@@ -62,4 +64,6 @@ examples:
       interrupt-parent = <&plic>;
       clocks = <&clk_apmu 10>, <&clk_apmu 13>;
       clock-names = "core", "io";
+      resets = <&syscon_apmu 2>, <&syscon_apmu 5>;
+      reset-names = "axi", "sdh";
     };
