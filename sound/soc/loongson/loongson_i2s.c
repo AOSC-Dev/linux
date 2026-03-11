@@ -32,14 +32,16 @@ static int loongson_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
 				struct snd_soc_dai *dai)
 {
 	struct loongson_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-	unsigned int mask;
+	unsigned int mask = 0;
 	int ret = 0;
 
 	switch (cmd) {
 	case SNDRV_PCM_TRIGGER_START:
+		mask = I2S_CTRL_RESET;
+		fallthrough;
 	case SNDRV_PCM_TRIGGER_RESUME:
 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-		mask = (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
+		mask |= (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) ?
 		       LOONGSON_I2S_TX_ENABLE : LOONGSON_I2S_RX_ENABLE;
 		regmap_update_bits(i2s->regmap, LS_I2S_CTRL, mask, mask);
 		break;
