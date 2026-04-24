@@ -218,6 +218,8 @@ u64 set_satp_mode_from_fdt(uintptr_t dtb_pa)
 			return SATP_MODE_39;
 		else if (!strcmp(mmu_type, "riscv,sv48"))
 			return SATP_MODE_48;
+		else if (!strcmp(mmu_type, "riscv,sv57"))
+			return SATP_MODE_57;
 		break;
 	}
 

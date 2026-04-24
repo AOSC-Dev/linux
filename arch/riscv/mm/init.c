@@ -834,8 +834,9 @@ static __init void set_satp_mode(uintptr_t dtb_pa)
 {
 	u64 identity_satp, hw_satp;
 	uintptr_t set_satp_mode_pmd = ((unsigned long)set_satp_mode) & PMD_MASK;
+	u64 satp_mode_limit_fdt = __pi_set_satp_mode_from_fdt(dtb_pa);
 	u64 satp_mode_limit = min_not_zero(__pi_set_satp_mode_from_cmdline(dtb_pa),
-					   __pi_set_satp_mode_from_fdt(dtb_pa));
+					   satp_mode_limit_fdt);
 
 	kernel_map.page_offset = PAGE_OFFSET_L5;
 
@@ -846,6 +847,10 @@ static __init void set_satp_mode(uintptr_t dtb_pa)
 		disable_pgtable_l4();
 		return;
 	}
+
+	/* Skip probing if max SATP mode known from FDT */
+	if (satp_mode_limit_fdt)
+		return;
 
 	create_p4d_mapping(early_p4d,
 			set_satp_mode_pmd, (uintptr_t)early_pud,
