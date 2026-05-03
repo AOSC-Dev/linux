@@ -395,7 +395,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
 			 con_id, NULL);
 		    dev_info(int3472->dev, "  register_regulator returned: %d\n", ret);
 		    if (ret) {
-			dev_err(int3472->dev, "Failed to register type 0x02x: %d\n", type, ret);
+			dev_err(int3472->dev, "Failed to register type 0x02x: %d\n", ret);
 		    }
 		    break;
 		case 0x11:
