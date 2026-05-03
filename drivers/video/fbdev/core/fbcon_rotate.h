@@ -91,6 +91,7 @@ static inline void rotate_ccw(const char *in, char *out, u32 width, u32 height)
 }
 
 int fbcon_rotate_font(struct fb_info *info, struct vc_data *vc);
+int fbcon_rotate_font_utf(struct fb_info *info, struct vc_data *vc);
 
 #if defined(CONFIG_FRAMEBUFFER_CONSOLE_ROTATION)
 void fbcon_set_bitops_cw(struct fbcon_par *par);
