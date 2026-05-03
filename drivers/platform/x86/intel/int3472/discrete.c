@@ -382,7 +382,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
 			break;
 		case 0x08:  /* Surface Pro 9 - treat as power*/
 		    dev_info(int3472->dev, "GPIO type 0x%02x detected on pin 0x%02x\n", type, agpio->pin_table[0]);
-		    dev_info(int3472->dev, "  con_id=%s, flags=0x%x\n", con_id, gpio_flags);
+		    dev_info(int3472->dev, "  con_id=%s, flags=0x%lx\n", con_id, gpio_flags);
 		    ret = skl_int3472_register_regulator(int3472, gpio,
 			 GPIO_REGULATOR_ENABLE_TIME,
 			 con_id, NULL);
