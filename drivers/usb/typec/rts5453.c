@@ -28,6 +28,7 @@
 #include <linux/usb/role.h>
 #include <linux/regulator/consumer.h>
 #include <linux/acpi.h>
+#include <linux/irq.h>
 #include "class.h"
 
 #define RTS_FIELD_GET(_mask, _reg) ((typeof(_mask))((_reg) & (_mask)) >> __bf_shf(_mask))
