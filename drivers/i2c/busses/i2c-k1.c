@@ -833,9 +833,7 @@ static int spacemit_i2c_probe(struct platform_device *pdev)
 	if (!i2c)
 		return -ENOMEM;
 
-	ret = of_property_read_u32(of_node, "clock-frequency", &i2c->clock_freq);
-	if (ret && ret != -EINVAL)
-		dev_warn(dev, "failed to read clock-frequency property: %d\n", ret);
+	of_property_read_u32(of_node, "clock-frequency", &i2c->clock_freq);
 
 	/* For now, this driver doesn't support high-speed. */
 	if (i2c->clock_freq > SPACEMIT_I2C_MAX_STANDARD_MODE_FREQ &&
@@ -844,7 +842,7 @@ static int spacemit_i2c_probe(struct platform_device *pdev)
 	} else if (i2c->clock_freq && i2c->clock_freq <= SPACEMIT_I2C_MAX_STANDARD_MODE_FREQ) {
 		i2c->mode = SPACEMIT_MODE_STANDARD;
 	} else {
-		dev_warn(i2c->dev, "invalid clock-frequency, fallback to fast mode");
+		dev_info(dev, "clock-frequency not set or out of range, using fast mode\n");
 		i2c->mode = SPACEMIT_MODE_FAST;
 		i2c->clock_freq = SPACEMIT_I2C_MAX_FAST_MODE_FREQ;
 	}
