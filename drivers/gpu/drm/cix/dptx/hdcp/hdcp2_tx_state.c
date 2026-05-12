@@ -48,7 +48,7 @@ static const uint8_t product_lc128[] = { 0x93U, 0xceU, 0x5aU, 0x56U, 0xa0U, 0xa1
 //  Returns:
 //      None
 //------------------------------------------------------------------------------
-void hdcp2_cipher_enable(struct cix_hdcp *hdcp, void *kdata)
+static void hdcp2_cipher_enable(struct cix_hdcp *hdcp, void *kdata)
 {
 	hdcp2_cipher_data_t *tx_data = kdata;
 
@@ -77,7 +77,7 @@ void hdcp2_cipher_enable(struct cix_hdcp *hdcp, void *kdata)
 //  Returns:
 //      None
 //------------------------------------------------------------------------------
-void hdcp2_cipher_disable(struct cix_hdcp *hdcp)
+static void hdcp2_cipher_disable(struct cix_hdcp *hdcp)
 {
 	hdcp2_hw_tx_enable_write(
 		hdcp,
@@ -105,7 +105,7 @@ void hdcp2_cipher_disable(struct cix_hdcp *hdcp)
 //  Returns:
 //      none
 //------------------------------------------------------------------------------
-void hdcp2_tx_state_init(struct cix_hdcp *hdcp)
+static void hdcp2_tx_state_init(struct cix_hdcp *hdcp)
 {
 	hdcp2_hw_tx_enable_write(
 		hdcp,
