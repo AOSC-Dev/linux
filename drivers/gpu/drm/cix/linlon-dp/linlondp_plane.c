@@ -289,7 +289,7 @@ linlondp_plane_atomic_get_property(struct drm_plane *plane,
 	return 0;
 }
 
-int linlondp_atomic_replace_property_blob_from_id(
+static int linlondp_atomic_replace_property_blob_from_id(
 	struct drm_device *dev, struct drm_property_blob **blob,
 	uint64_t blob_id, ssize_t expected_size, ssize_t expected_elem_size,
 	bool *replaced)
