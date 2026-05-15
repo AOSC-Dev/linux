@@ -26,10 +26,6 @@
 #include "hdcp2_hw_tx.h"
 #include "hdcp2_key_drvn_tx.h"
 
-static const uint8_t test_lc128[] = { 0x93U, 0xceU, 0x5aU, 0x56U, 0xa0U, 0xa1U,
-				      0xf4U, 0xf7U, 0x3cU, 0x65U, 0x8aU, 0x1bU,
-				      0xd2U, 0xaeU, 0xf0U, 0xf7U };
-
 static const uint8_t product_lc128[] = { 0x93U, 0xceU, 0x5aU, 0x56U, 0xa0U, 0xa1U,
 				      0xf4U, 0xf7U, 0x3cU, 0x65U, 0x8aU, 0x1bU,
 				      0xd2U, 0xaeU, 0xf0U, 0xf7U };
@@ -58,7 +54,6 @@ static void hdcp2_cipher_enable(struct cix_hdcp *hdcp, void *kdata)
 		hdcp, aes_tx_sel_normal); //  set AES to stream cipher
 	hdcp2_hw_tx_enable_write(hdcp, true); //  enable HDCP transmit
 
-	//hdcp2_hw_tx_lc128_write(hdcp, test_lc128);	//  re-load the lc128 value
 	hdcp2_hw_tx_lc128_write(hdcp,
 				product_lc128); //  re-load the lc128 value
 
@@ -120,7 +115,6 @@ static void hdcp2_tx_state_init(struct cix_hdcp *hdcp)
 				    1); //  AES input select set to cipher mode
 	hdcp2_hw_tx_aes_ctr_reset(hdcp); //  Issue a reset to the AES counter
 	hdcp2_hw_tx_enable_write(hdcp, true); //  Enable HDCP
-	//hdcp2_hw_tx_lc128_write(hdcp, test_lc128);	//  Set the lc128 value
 	hdcp2_hw_tx_lc128_write(hdcp,
 				product_lc128); //  re-load the lc128 value
 }
