@@ -650,10 +650,10 @@ struct linlondp_dev *linlondp_dev_create(struct device *dev)
 
 	mdev->dev = dev;
 
-    err = device_property_read_u32(dev, "enabled_by_gop",
+	err = device_property_read_u32(dev, "enabled_by_gop",
                                (u32 *)&mdev->enabled_by_gop);
-    if (err)
-        mdev->enabled_by_gop = 0;
+	if (err)
+        	mdev->enabled_by_gop = 0;
 
 	is_insmod = linlondp_gop_get();
 	if (is_insmod)
