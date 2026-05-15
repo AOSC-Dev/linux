@@ -100,8 +100,6 @@ should_map_wc(struct panthor_gem_object *bo, struct panthor_vm *exclusive_vm)
 	 * or not.
 	 */
 	if (bo->base.base.dev) {
-		struct panthor_device *ptdev =
-			container_of(bo->base.base.dev, struct panthor_device, base);
 		if (ptdev->coherency_mode == PANTHOR_COHERENCY_ACE)
 			return false;
 	}
