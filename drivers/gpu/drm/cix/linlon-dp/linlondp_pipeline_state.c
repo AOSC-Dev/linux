@@ -1243,7 +1243,6 @@ linlondp_split_sbs_master_data_flow(struct linlondp_crtc_state *kcrtc_st,
 		u32 src_y = master->in_y;
 		u32 src_w = master->in_w;
 		u32 src_h = master->in_h;
-		u32 master_valid_w, slave_valid_w;
 		u32 h_scaling_ratio = 0;
 
 #ifdef SBS_NO_OVERLAP_SCALING
@@ -1275,8 +1274,8 @@ linlondp_split_sbs_master_data_flow(struct linlondp_crtc_state *kcrtc_st,
 		/* When overlap is needed, ensure we don't fetch outside of the
 		 * layer when adding the overlap
 		 */
-		master_valid_w = master->out_w;
-		slave_valid_w = slave->out_w;
+		u32 master_valid_w = master->out_w;
+		u32 slave_valid_w = slave->out_w;
 
 #ifdef SBS_NO_OVERLAP_SCALING
 		master->out_w += min(kcrtc->sbs_overlap, slave_valid_w);
