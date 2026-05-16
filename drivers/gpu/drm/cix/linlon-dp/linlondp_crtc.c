@@ -20,11 +20,7 @@
 #include "linlondp_dev.h"
 #include "linlondp_kms.h"
 #include "linlondp_drm.h"
-
-extern int linlondp_atomic_replace_property_blob_from_id(
-	struct drm_device *dev, struct drm_property_blob **blob,
-	uint64_t blob_id, ssize_t expected_size, ssize_t expected_elem_size,
-	bool *replaced);
+#include "linlondp_framebuffer.h"
 
 void linlondp_crtc_get_color_config(struct drm_crtc_state *crtc_st,
 				    u32 *color_depths, u32 *color_formats)
