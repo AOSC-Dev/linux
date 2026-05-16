@@ -8,6 +8,7 @@
 #define _LINLONDP_FRAMEBUFFER_H_
 
 #include <drm/drm_framebuffer.h>
+#include <drm/drm_property.h>
 #include "linlondp_format_caps.h"
 
 /**
@@ -46,4 +47,8 @@ dma_addr_t linlondp_fb_get_pixel_addr(struct linlondp_fb *kfb, int x, int y,
 bool linlondp_fb_is_layer_supported(struct linlondp_fb *kfb, u32 layer_type,
 				    u32 rot);
 
+int linlondp_atomic_replace_property_blob_from_id(
+	struct drm_device *dev, struct drm_property_blob **blob,
+	uint64_t blob_id, ssize_t expected_size, ssize_t expected_elem_size,
+	bool *replaced);
 #endif
