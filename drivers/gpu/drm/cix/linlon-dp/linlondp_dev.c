@@ -620,15 +620,6 @@ static int linlondp_gop_get(void)
 	return enabled_by_gop;
 }
 
-static void linlondp_gop_set(void)
-{
-	struct arm_smccc_res res;
-	int dpu_gop_bit = 1;
-
-	arm_smccc_smc(CIX_SIP_DP_GOP_CTRL, SKY1_SIP_DP_GOP_SET,
-		      dpu_gop_bit << DPU_GOP_SHIFT, 0, 0, 0, 0, 0, &res);
-}
-
 struct linlondp_dev *linlondp_dev_create(struct device *dev)
 {
 	struct platform_device *pdev = to_platform_device(dev);
