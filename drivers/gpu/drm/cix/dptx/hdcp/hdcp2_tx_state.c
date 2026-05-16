@@ -25,6 +25,7 @@
 #include "cix_hdcp_ioctl_cmd.h"
 #include "hdcp2_hw_tx.h"
 #include "hdcp2_key_drvn_tx.h"
+#include "hdcp2_tx_state.h"
 
 static const uint8_t product_lc128[] = { 0x93U, 0xceU, 0x5aU, 0x56U, 0xa0U, 0xa1U,
 				      0xf4U, 0xf7U, 0x3cU, 0x65U, 0x8aU, 0x1bU,
