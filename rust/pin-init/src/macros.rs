@@ -1366,6 +1366,13 @@ macro_rules! __init_internal {
         // SAFETY: the field has been initialized.
         let _ = unsafe { &mut (*$slot).$field };
 
+        // SAFETY:
+        // - the field is not structurally pinned, since the line above must compile,
+        // - the field has been initialized,
+        // - the reference is only valid until the end of the initializer.
+        // #[allow(unused_variables)]
+        // let $field = unsafe { &mut (*$slot).$field };
+
         // Create the drop guard:
         //
         // We rely on macro hygiene to make it impossible for users to access this local variable.
@@ -1412,6 +1419,14 @@ macro_rules! __init_internal {
         // `ptr::write` below has the same requirement.
         // SAFETY: the field has been initialized.
         let _ = unsafe { &mut (*$slot).$field };
+
+        #[allow(unused_variables)]
+        // SAFETY:
+        // - the field is not structurally pinned, since no `use_data` was required to create this
+        //   initializer,
+        // - the field has been initialized,
+        // - the reference is only valid until the end of the initializer.
+        // let $field = unsafe { &mut (*$slot).$field };
 
         // Create the drop guard:
         //
