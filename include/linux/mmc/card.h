@@ -332,6 +332,8 @@ struct mmc_card {
 #define MMC_QUIRK_NO_UHS_DDR50_TUNING	(1<<18) /* Disable DDR50 tuning */
 #define MMC_QUIRK_BROKEN_MDT    (1<<19) /* Wrong manufacturing year */
 #define MMC_QUIRK_FIXED_SECURE_ERASE_TRIM_TIME	(1<<20) /* Secure erase/trim time is fixed regardless of size */
+#define MMC_QUIRK_WORKING_SD_CQ	(1<<30)		/* SD card has known-good CQ implementation */
+#define MMC_QUIRK_ERASE_BROKEN	(1<<31)		/* Skip erase */
 
 	bool			written_flag;	/* Indicates eMMC has been written since power on */
 	bool			reenable_cmdq;	/* Re-enable Command Queue */
@@ -356,6 +358,7 @@ struct mmc_card {
 	struct sd_switch_caps	sw_caps;	/* switch (CMD6) caps */
 	struct sd_ext_reg	ext_power;	/* SD extension reg for PM */
 	struct sd_ext_reg	ext_perf;	/* SD extension reg for PERF */
+	u8			*ext_reg_buf;	/* 512 byte block for extension register R/W */
 
 	struct sd_uhs2_config	uhs2_config;	/* SD UHS-II config */
 
@@ -380,6 +383,8 @@ struct mmc_card {
 	unsigned int    nr_parts;
 
 	struct workqueue_struct *complete_wq;	/* Private workqueue */
+
+	unsigned int		max_posted_writes; /* command queue posted write limit */
 };
 
 static inline bool mmc_large_sector(struct mmc_card *card)
