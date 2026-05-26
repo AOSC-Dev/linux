@@ -21,9 +21,9 @@
 union smc_message {
 	u32 value;
 	struct {
-		u32 id		: 4;
+		u32 id		: 8;
 		u32 info	: 4;
-		u32 val		: 16;
+		u32 val		: 12;
 		u32 cmd		: 6;
 		u32 extra	: 1;
 		u32 complete	: 1;
@@ -220,8 +220,9 @@ static inline int do_service_request(u32 id, u32 info, u32 cmd, u32 val, u32 ext
 static unsigned int loongson3_cpufreq_get(unsigned int cpu)
 {
 	int ret;
+	unsigned int core = cpu_logical_map(cpu);
 
-	ret = do_service_request(cpu, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ_INFO, 0, 0);
+	ret = do_service_request(core, FREQ_INFO_TYPE_FREQ, CMD_GET_FREQ_INFO, 0, 0);
 
 	return ret * KILO;
 }
@@ -229,9 +230,9 @@ static unsigned int loongson3_cpufreq_get(unsigned int cpu)
 static int loongson3_cpufreq_target(struct cpufreq_policy *policy, unsigned int index)
 {
 	int ret;
+	unsigned int core = cpu_logical_map(policy->cpu);
 
-	ret = do_service_request(cpu_data[policy->cpu].core,
-				 FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0);
+	ret = do_service_request(core, FREQ_INFO_TYPE_LEVEL, CMD_SET_FREQ_INFO, index, 0);
 
 	return (ret >= 0) ? 0 : ret;
 }
