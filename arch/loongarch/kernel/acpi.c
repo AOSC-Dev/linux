@@ -176,7 +176,8 @@ int pptt_enabled;
 
 int __init parse_acpi_topology(void)
 {
-	int cpu, topology_id, package_id;
+	int cpu, topology_id, package_id, i;
+	int package_acpi_ids[MAX_PACKAGES], nr_packages = 0;
 
 	for_each_possible_cpu(cpu) {
 		topology_id = find_acpi_cpu_topology(cpu, 0);
@@ -200,7 +201,23 @@ int __init parse_acpi_topology(void)
 			pr_warn("Invalid BIOS PPTT\n");
 			return -ENOENT;
 		}
+
+		for (i = 0; i < nr_packages; i++)
+			if (package_acpi_ids[i] == package_id)
+				break;
+
+		if (i == nr_packages)
+			package_acpi_ids[nr_packages++] = package_id;
+
 		cpu_data[cpu].package = package_id;
+	}
+
+	for_each_possible_cpu(cpu) {
+		for (int i = 0; i < nr_packages; i++)
+			if (cpu_data[cpu].package == package_acpi_ids[i]) {
+				cpu_data[cpu].package = i;
+				break;
+			}
 	}
 
 	pptt_enabled = 1;
