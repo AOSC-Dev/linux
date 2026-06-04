@@ -33,7 +33,7 @@
 	memory@200000 {
 		device_type = "memory";
 		reg = <0 0x00200000 0 0x0ee00000>,
-		      <0 0x90000000 0 0x10000000>;
+		      <0 0x90000000 0 0x30000000>;
 	};
 
 	reserved-memory {
@@ -46,21 +46,6 @@
 			reusable;
 			size = <0 0x02000000>;
 			linux,cma-default;
-		};
-	};
-
-	sdio_pwrseq: sdio-pwrseq {
-		compatible = "mmc-pwrseq-simple";
-		pinctrl-names = "default";
-		pinctrl-0 = <&sdio1en>;
-		reset-gpios = <&gpio 81 GPIO_ACTIVE_HIGH>;
-	};
-};
-
-&pinctrl {
-	func-gpio {
-		sdio1en: pinmux_G81_as_sdio1en {
-			pinmux = <PINMUX(81, 0x0)>;
 		};
 	};
 };
@@ -78,6 +63,24 @@
 		compatible = "snps,dwmac-mdio";
 
 		yt8531h0: ethernet-phy@0 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <0>;
+			motorcomm,led0_cfg = <0x40>; //千兆常亮
+			motorcomm,led1_cfg = <0x30>; //百兆 十兆常亮
+			motorcomm,led2_cfg = <0x2600>; //有数据时闪烁
+		};
+	};
+};
+
+&gmac1 {
+	status = "okay";
+	phy-handle = <&yt8531h1>;
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "snps,dwmac-mdio";
+
+		yt8531h1: ethernet-phy@1 {
 			compatible = "ethernet-phy-ieee802.3-c22";
 			reg = <0>;
 			motorcomm,led0_cfg = <0x40>; //千兆常亮
