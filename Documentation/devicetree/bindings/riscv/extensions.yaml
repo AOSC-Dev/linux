@@ -294,10 +294,10 @@ properties:
                of the PTE A/D bits or page faults when they need updated.
             2) Only Svade present in DT => Supervisor must assume Svade to be
                always enabled.
-            3) Only Svadu present in DT => Supervisor must assume Svadu to be
-               always enabled.
+            3) Only Svadu present in DT => Supervisor must assume Svadu is
+               enabled at boot.
             4) Both Svade and Svadu present in DT => Supervisor must assume
-               Svadu turned-off at boot time. To use Svadu, supervisor must
+               Svadu is disabled at boot time. To use Svadu, supervisor must
                explicitly enable it using the SBI FWFT extension.
 
         - const: svadu
