@@ -848,8 +848,11 @@ ttm_kmap_iter_linear_io_init(struct ttm_kmap_iter_linear_io *iter_io,
 			     struct ttm_device *bdev,
 			     struct ttm_resource *mem)
 {
-	enum ttm_caching caching = mem->bus.caching;
+	enum ttm_caching caching;
 	int ret;
+
+	ret = ttm_mem_io_reserve(bdev, mem);
+	caching = mem->bus.caching;
 
 #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
 	defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
@@ -859,7 +862,6 @@ ttm_kmap_iter_linear_io_init(struct ttm_kmap_iter_linear_io *iter_io,
 		caching = ttm_write_combined;
 #endif
 
-	ret = ttm_mem_io_reserve(bdev, mem);
 	if (ret)
 		goto out_err;
 	if (!mem->bus.is_iomem) {
