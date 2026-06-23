@@ -70,12 +70,27 @@ SYM_FUNC_START(fallback_scalar_usercopy_sum_enabled)
 	add	t0, a0, a2
 
 	/*
-	 * Use byte copy only if too small.
-	 * SZREG holds 4 for RV32 and 8 for RV64
+	 * For small copies below the large-copy threshold, use word-copy if
+	 * both src and dst are naturally aligned. Unaligned or sub-word copies
+	 * are left to the byte-copy tail.
 	 */
 	li	a3, 9*SZREG-1 /* size must >= (word_copy stride + SZREG-1) */
+	bgeu	a2, a3, .Llarge_copy_user
+	li	a3, SZREG
 	bltu	a2, a3, .Lbyte_copy_tail
+	or	a3, a0, a1
+	andi	a3, a3, SZREG-1
+	bnez	a3, .Lbyte_copy_tail
+	andi	t1, t0, ~(SZREG-1)
+5:
+	fixup REG_L   a5, 0(a1), 10f
+	addi	a1, a1, SZREG
+	fixup REG_S   a5, 0(a0), 10f
+	addi	a0, a0, SZREG
+	bltu	a0, t1, 5b
+	j	.Lbyte_copy_tail
 
+.Llarge_copy_user:
 	/*
 	 * Copy first bytes until dst is aligned to word boundary.
 	 * a0 - start of dst
