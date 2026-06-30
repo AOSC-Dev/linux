@@ -15082,6 +15082,13 @@ F:	arch/loongarch/
 F:	drivers/*/*loongarch*
 F:	drivers/cpufreq/loongson3_cpufreq.c
 
+LOONGSON CAN FD DRIVER
+M:	Bingxiong Li <libingxiong@loongson.cn>
+M:	Binbin Zhou <zhoubinbin@loongson.cn>
+L:	linux-can@vger.kernel.org
+S:	Maintained
+F:	drivers/net/can/loongson_canfd/
+
 LOONGSON GPIO DRIVER
 M:	Yinbo Zhu <zhuyinbo@loongson.cn>
 L:	linux-gpio@vger.kernel.org
