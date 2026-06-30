@@ -128,6 +128,8 @@
 .endm
 
 SYM_CODE_START(handle_exception)
+	/* Caution: CSR_SCARTCH does not reflect privilege mode from now on. */
+
 	/*
 	 * If coming from userspace, preserve the user thread pointer and load
 	 * the kernel thread pointer.  If we came from the kernel, the scratch
@@ -160,6 +162,19 @@ SYM_CODE_START(handle_exception)
 #endif
 
 .Lsave_context:
+	REG_S t0, TASK_TI_T0(tp)
+
+	/*
+	 * Grab the saved TP, and also set the scratch register back to 0, so
+	 * that if a recursive exception occurs, the exception vector knows it
+	 * came from the kernel.
+	 *
+	 * Caution: CSR_SCARTCH does not reflect privilege mode before this.
+	 */
+	csrrw t0, CSR_SCRATCH, zero
+	REG_S t0, TASK_TI_TP(tp)
+	REG_L t0, TASK_TI_T0(tp)
+
 	REG_S sp, TASK_TI_USER_SP(tp)
 	REG_L sp, TASK_TI_KERNEL_SP(tp)
 	addi sp, sp, -(PT_SIZE_ON_STACK)
@@ -187,19 +202,13 @@ SYM_CODE_START(handle_exception)
 	csrr s2, CSR_EPC
 	csrr s3, CSR_TVAL
 	csrr s4, CSR_CAUSE
-	csrr s5, CSR_SCRATCH
+	REG_L s5, TASK_TI_TP(tp)
 	REG_S s0, PT_SP(sp)
 	REG_S s1, PT_STATUS(sp)
 	REG_S s2, PT_EPC(sp)
 	REG_S s3, PT_BADADDR(sp)
 	REG_S s4, PT_CAUSE(sp)
 	REG_S s5, PT_TP(sp)
-
-	/*
-	 * Set the scratch register to 0, so that if a recursive exception
-	 * occurs, the exception vector knows it came from the kernel
-	 */
-	csrw CSR_SCRATCH, x0
 
 	/* Load the global pointer */
 	load_global_pointer
@@ -268,11 +277,6 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
 	/* Save the kernel shadow call stack pointer */
 	scs_save_current
 
-	/*
-	 * Save TP into the scratch register , so we can find the kernel data
-	 * structures again.
-	 */
-	csrw CSR_SCRATCH, tp
 1:
 #ifdef CONFIG_RISCV_ISA_V_PREEMPTIVE
 	move a0, sp
@@ -305,11 +309,42 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
 
 	REG_L x1,  PT_RA(sp)
 	REG_L x3,  PT_GP(sp)
-	REG_L x4,  PT_TP(sp)
-	REG_L x5,  PT_T0(sp)
 	restore_from_x6_to_x31
 
-	REG_L x2,  PT_SP(sp)
+	/*
+	 * Stash t0 and tp in thread_info since we can't access the stack after
+	 * switching CSR_SCRATCH.
+	 */
+	REG_L t0,  PT_T0(sp)
+	REG_S t0,  TASK_TI_T0(tp)
+	REG_L t0,  PT_TP(sp)
+	REG_S t0,  TASK_TI_TP(tp)
+
+	REG_L sp,  PT_SP(sp)
+
+	/* If returning to user mode, set CSR_SCRATCH to tp, else 0 */
+	csrr t0, CSR_STATUS
+#if defined(CONFIG_RISCV_M_MODE)
+	/* the MPP value is too large to be used as an immediate arg for andi */
+	srli t0, t0, SR_MPP_SHIFT
+	andi t0, t0, SR_MPP >> SR_MPP_SHIFT
+	/* t0 = (mstatus & SR_MPP) >> SR_MPP_SHIFT */
+#else
+	andi t0, t0, SR_SPP
+	/* t0 = sstatus & SR_SPP */
+#endif
+	seqz t0, t0
+	/* t0 = !(status & SR_PP) */
+	neg t0, t0
+	/* t0 = (status & SR_PP) ? 0 : -1 */
+	and t0, t0, tp
+	/* t0 = (status & SR_PP) ? 0 : tp */
+	csrw CSR_SCRATCH, t0
+
+	/* Caution: CSR_SCARTCH does not reflect privilege mode from now on. */
+
+	REG_L t0,  TASK_TI_T0(tp)
+	REG_L tp,  TASK_TI_TP(tp)
 
 #ifdef CONFIG_RISCV_M_MODE
 	mret

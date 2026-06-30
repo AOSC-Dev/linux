@@ -49,6 +49,8 @@ void asm_offsets(void)
 	OFFSET(TASK_TI_A1, task_struct, thread_info.a1);
 	OFFSET(TASK_TI_A2, task_struct, thread_info.a2);
 #endif
+	OFFSET(TASK_TI_TP, task_struct, thread_info.tp);
+	OFFSET(TASK_TI_T0, task_struct, thread_info.t0);
 
 	OFFSET(TASK_TI_CPU_NUM, task_struct, thread_info.cpu);
 #ifdef CONFIG_RISCV_USER_CFI

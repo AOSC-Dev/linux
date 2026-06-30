@@ -73,6 +73,11 @@ struct thread_info {
 	 */
 	unsigned long		a0, a1, a2;
 #endif
+	/*
+	 * Used in ret_from_exception() and handle_exception() as scratch space
+	 * when CSR_SCRATCH does not reflect the current privilege mode.
+	 */
+	unsigned long		tp, t0;
 #ifdef CONFIG_RISCV_USER_CFI
 	struct cfi_state	user_cfi_state;
 #endif

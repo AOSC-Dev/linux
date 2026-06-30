@@ -16,6 +16,7 @@
 #define SR_MPIE		_AC(0x00000080, UL) /* Previous Machine IE */
 #define SR_SPP		_AC(0x00000100, UL) /* Previously Supervisor */
 #define SR_MPP		_AC(0x00001800, UL) /* Previously Machine */
+#define SR_MPP_SHIFT	11
 #define SR_SUM		_AC(0x00040000, UL) /* Supervisor User Memory Access */
 
 /* zicfilp landing pad status bit */
