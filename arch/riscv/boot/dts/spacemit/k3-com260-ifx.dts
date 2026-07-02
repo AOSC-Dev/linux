@@ -37,3 +37,7 @@
 	sd-uhs-sdr104;
 	status = "okay";
 };
+
+&ufshc {
+	status = "okay";
+};
