@@ -52,11 +52,14 @@ void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
 	int graph_idx = 0;
 	int level = 0;
 
+	if (task == NULL)
+		task = current;
+
 	if (regs) {
 		fp = frame_pointer(regs);
 		sp = user_stack_pointer(regs);
 		pc = instruction_pointer(regs);
-	} else if (task == NULL || task == current) {
+	} else if (task == current) {
 		fp = (unsigned long)__builtin_frame_address(0);
 		sp = current_stack_pointer;
 		pc = (unsigned long)walk_stackframe;
