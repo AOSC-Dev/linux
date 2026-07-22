@@ -6,15 +6,29 @@
 
 use crate::{
     alloc::allocator::Kmalloc,
-    bindings, device, drm,
-    drm::driver::AllocImpl,
+    bindings,
+    device,
+    drm::{
+        self,
+        driver::AllocImpl, //
+    },
     error::from_err_ptr,
-    error::Result,
     prelude::*,
-    sync::aref::{ARef, AlwaysRefCounted},
-    types::Opaque,
+    sync::aref::{
+        ARef,
+        AlwaysRefCounted, //
+    },
+    types::Opaque, //
 };
-use core::{alloc::Layout, mem, ops::Deref, ptr, ptr::NonNull};
+use core::{
+    alloc::Layout,
+    mem,
+    ops::Deref,
+    ptr::{
+        self,
+        NonNull, //
+    },
+};
 
 #[cfg(CONFIG_DRM_LEGACY)]
 macro_rules! drm_legacy_fields {
@@ -86,7 +100,7 @@ impl<T: drm::Driver> Device<T> {
         name: crate::str::as_char_ptr_in_const_context(T::INFO.name).cast_mut(),
         desc: crate::str::as_char_ptr_in_const_context(T::INFO.desc).cast_mut(),
 
-        driver_features: drm::driver::FEAT_GEM,
+        driver_features: T::FEATURES,
         ioctls: T::IOCTLS.as_ptr(),
         num_ioctls: T::IOCTLS.len() as i32,
         fops: &Self::GEM_FOPS,
@@ -184,7 +198,10 @@ impl<T: drm::Driver> Device<T> {
         // SAFETY:
         // - When `release` runs it is guaranteed that there is no further access to `this`.
         // - `this` is valid for dropping.
-        unsafe { core::ptr::drop_in_place(this) };
+        // unsafe { core::ptr::drop_in_place(this) };
+        // HACK: data might be uninitialized so leak the DRM device instead. The expected number
+        //       of times the asahi device gets released is once at poweroff or reboot.
+        let _ = core::mem::ManuallyDrop::new(this);
     }
 }
 

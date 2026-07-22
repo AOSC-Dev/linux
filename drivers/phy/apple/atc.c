@@ -1133,6 +1133,8 @@ static int atcphy_configure_pipehandler(struct apple_atcphy *atcphy, bool host)
 	case ATCPHY_PIPEHANDLER_STATE_USB4:
 		dev_warn(atcphy->dev,
 			 "ATCPHY_PIPEHANDLER_STATE_USB4 not implemented; falling back to USB2\n");
+		fallthrough;
+	case ATCPHY_PIPEHANDLER_STATE_DUMMY:
 		ret = atcphy_configure_pipehandler_dummy(atcphy);
 		atcphy->pipehandler_up = false;
 		break;

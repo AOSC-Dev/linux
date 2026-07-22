@@ -16,6 +16,21 @@
 // Please see https://github.com/Rust-for-Linux/linux/issues/2 for details on
 // the unstable features in use.
 //
+// ============ start asahi downstream features ===========
+#![feature(associated_type_defaults)]
+//
+#![feature(cfg_version)]
+//
+// Stable since Rust 1.87.0.
+#![feature(ptr_sub_ptr)]
+//
+#![feature(sized_type_properties)]
+//
+#![feature(slice_range)]
+//
+#![cfg_attr(CONFIG_RUSTC_HAS_COERCE_POINTEE, feature(pin_coerce_unsized_trait))]
+// ============ end asahi dowanstream features ============
+//
 // Stable since Rust 1.79.0.
 #![feature(generic_nonzero)]
 #![feature(inline_const)]
@@ -37,6 +52,7 @@
 #![feature(const_option)]
 #![feature(const_ptr_write)]
 #![feature(const_refs_to_cell)]
+#![feature(const_refs_to_static)]
 //
 // Stable since Rust 1.84.0.
 #![feature(strict_provenance)]
@@ -69,6 +85,7 @@ extern crate self as kernel;
 pub use ffi;
 
 pub mod acpi;
+pub mod addr;
 pub mod alloc;
 #[cfg(CONFIG_AUXILIARY_BUS)]
 pub mod auxiliary;
@@ -88,10 +105,15 @@ pub mod cpufreq;
 pub mod cpumask;
 pub mod cred;
 pub mod debugfs;
+#[cfg(CONFIG_DEV_COREDUMP)]
+pub mod devcoredump;
 pub mod device;
 pub mod device_id;
 pub mod devres;
 pub mod dma;
+pub mod dma_buf;
+#[cfg(CONFIG_DMA_SHARED_BUFFER)]
+pub mod dma_fence;
 pub mod driver;
 #[cfg(CONFIG_DRM = "y")]
 pub mod drm;
@@ -104,12 +126,15 @@ pub mod fs;
 #[cfg(CONFIG_I2C = "y")]
 pub mod i2c;
 pub mod id_pool;
+#[cfg(CONFIG_IIO)]
+pub mod iio;
 #[doc(hidden)]
 pub mod impl_flags;
 pub mod init;
 pub mod io;
 pub mod ioctl;
 pub mod iommu;
+pub mod iosys_map;
 pub mod iov;
 pub mod irq;
 pub mod jump_label;
@@ -146,7 +171,6 @@ pub mod security;
 pub mod seq_file;
 pub mod sizes;
 pub mod slice;
-#[cfg(CONFIG_SOC_BUS)]
 pub mod soc;
 mod static_assert;
 #[doc(hidden)]

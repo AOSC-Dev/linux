@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0 or MIT
 
+use kernel::bindings;
 use kernel::drm;
 use kernel::prelude::*;
 use kernel::uaccess::UserSlice;
@@ -19,6 +20,10 @@ impl drm::file::DriverFile for File {
 
     fn open(_dev: &drm::Device<Self::Driver>) -> Result<Pin<KBox<Self>>> {
         KBox::try_pin_init(try_pin_init!(Self {}), GFP_KERNEL)
+    }
+
+    fn as_raw(&self) -> *mut bindings::drm_file {
+        todo!()
     }
 }
 
