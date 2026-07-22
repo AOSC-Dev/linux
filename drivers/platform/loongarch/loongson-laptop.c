@@ -200,6 +200,7 @@ static int loongson_hotkey_resume(struct device *dev)
 
 	bd = backlight_device_get_by_type(BACKLIGHT_PLATFORM);
 	if (bd) {
+		bl_powered = false;
 		loongson_laptop_backlight_update(bd) ?
 		pr_warn("Loongson_backlight: resume brightness failed") :
 		pr_info("Loongson_backlight: resume brightness %d\n", bd->props.brightness);
