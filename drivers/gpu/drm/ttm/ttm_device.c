@@ -247,7 +247,7 @@ int ttm_device_init(struct ttm_device *bdev, const struct ttm_device_funcs *func
 #if defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) || \
 	defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) || \
 	defined(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL)
-	bdev->dma_coherent = dev->dma_coherent;
+	bdev->dma_coherent = dev_dma_coherent(dev);
 #endif
 
 	return 0;
